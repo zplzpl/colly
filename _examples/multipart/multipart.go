@@ -2,19 +2,26 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 	"time"
 
 	"github.com/gocolly/colly"
+	"github.com/zplzpl/colly/buffer/bufferpool"
 )
 
 func generateFormData() map[string][]byte {
 	f, _ := os.Open("gocolly.jpg")
 	defer f.Close()
 
-	imgData, _ := ioutil.ReadAll(f)
+	buffer := bufferpool.Get()
+	buffer.Reset()
+
+	_ ,_ =io.Copy(buffer,f)
+
+	imgData := buffer.Bytes()
+	buffer.Free()
 
 	return map[string][]byte{
 		"firstname": []byte("one"),
