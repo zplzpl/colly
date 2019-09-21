@@ -30,7 +30,7 @@ import (
 	"time"
 
 	"github.com/gobwas/glob"
-	"github.com/zplzpl/colly/buffer/bufferpool"
+	"github.com/gocolly/colly/buffer/bufferpool"
 )
 
 type httpBackend struct {

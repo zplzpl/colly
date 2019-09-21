@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/gocolly/colly"
-	"github.com/zplzpl/colly/buffer/bufferpool"
+	"github.com/gocolly/colly/buffer/bufferpool"
 )
 
 func generateFormData() map[string][]byte {

@@ -23,7 +23,7 @@ import (
 	"strings"
 	"sync/atomic"
 
-	"github.com/zplzpl/colly/buffer/bufferpool"
+	"github.com/gocolly/colly/buffer/bufferpool"
 )
 
 // Request is the representation of a HTTP request made by a Collector

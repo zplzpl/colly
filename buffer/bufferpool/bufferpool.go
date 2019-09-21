@@ -1,6 +1,6 @@
 package bufferpool
 
-import "github.com/zplzpl/colly/buffer"
+import "github.com/gocolly/colly/buffer"
 
 var (
 	_pool = buffer.NewPool()
