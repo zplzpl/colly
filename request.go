@@ -18,11 +18,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
 	"sync/atomic"
+
+	"github.com/zplzpl/colly/buffer/bufferpool"
 )
 
 // Request is the representation of a HTTP request made by a Collector
@@ -161,10 +162,22 @@ func (r *Request) Marshal() ([]byte, error) {
 	var err error
 	var body []byte
 	if r.Body != nil {
-		body, err = ioutil.ReadAll(r.Body)
-		if err != nil {
-			return nil, err
+
+		buffer := bufferpool.Get()
+		buffer.Reset()
+
+		if _,err = io.Copy(buffer,r.Body);err!=nil {
+			return nil,err
 		}
+
+		body = buffer.Bytes()
+		buffer.Free()
+		buffer=nil
+
+		//body, err = ioutil.ReadAll(r.Body)
+		//if err != nil {
+		//	return nil, err
+		//}
 	}
 	sr := &serializableRequest{
 		URL:    r.URL.String(),

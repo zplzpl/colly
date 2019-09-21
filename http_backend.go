@@ -15,11 +15,11 @@
 package colly
 
 import (
+	"compress/gzip"
 	"crypto/sha1"
 	"encoding/gob"
 	"encoding/hex"
 	"io"
-	"io/ioutil"
 	"math/rand"
 	"net/http"
 	"os"
@@ -29,9 +29,8 @@ import (
 	"sync"
 	"time"
 
-	"compress/gzip"
-
 	"github.com/gobwas/glob"
+	"github.com/zplzpl/colly/buffer/bufferpool"
 )
 
 type httpBackend struct {
@@ -199,13 +198,19 @@ func (h *httpBackend) Do(request *http.Request, bodySize int) (*Response, error)
 		}
 		defer bodyReader.(*gzip.Reader).Close()
 	}
-	body, err := ioutil.ReadAll(bodyReader)
-	if err != nil {
-		return nil, err
+
+	buffer := bufferpool.Get()
+	buffer.Reset()
+
+	if _,err = io.Copy(buffer,bodyReader);err!=nil {
+		return nil,err
 	}
+	body := buffer.Bytes()
+	buffer.Free()
+
 	return &Response{
 		StatusCode: res.StatusCode,
-		Body:       body,
+		Body: body,
 		Headers:    &res.Header,
 	}, nil
 }
