@@ -14,7 +14,7 @@ type Pool struct {
 func NewPool() Pool {
 	return Pool{p: &sync.Pool{
 		New: func() interface{} {
-			return &Buffer{Buffer:bytes.NewBuffer(make([]byte,_size)),}
+			return &Buffer{Buffer:bytes.NewBuffer(make([]byte, 0, _size)),}
 		},
 	}}
 }
